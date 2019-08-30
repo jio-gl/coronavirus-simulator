@@ -3,6 +3,7 @@ package invasion
 import (
 	"AlienInvasion/aliens"
 	"AlienInvasion/world"
+	"fmt"
 )
 
 type Invasion struct {
@@ -20,11 +21,14 @@ func New(worldFilename string, alienPopulation int) Invasion {
 func (anInv Invasion) RunInvasionSync(days int) {
 
 	for i := 0; i < days; i++ {
+		fmt.Println("Day = ", i)
 		// Sync day, move all aliens one city and then do fighting.
 
 		// Move all aliens, one city step.
 		for a := 0; a < anInv.aliensInvading.NumberOfAliens(); a++ {
+			fmt.Println( "Alien = ",a )
 			if anInv.aliensInvading.IsDead(a) {
+				fmt.Println( "Alien is Dead = ",a )
 				continue
 			}
 			aLoc := anInv.aliensInvading.Location(a)
@@ -32,7 +36,8 @@ func (anInv Invasion) RunInvasionSync(days int) {
 			anInv.aliensInvading.MoveAlienSync(a,newCity)
 		}
 		// Do sync fighting.
-		destroyedCities := anInv.aliensInvading.FightingSync()
+		//destroyedCities :=
+		anInv.aliensInvading.FightingSync()
 		// Iterate destroyed cities, erase cities from graph, and mark killed aliens as dead.
 
 	}

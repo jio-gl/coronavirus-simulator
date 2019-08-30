@@ -128,7 +128,13 @@ func (w World) RandomNeighboringCity(cityId int) int {
 		return cityId // Same city if no neighboring cities, trapped.
 	}
 	randNeighborIndex := rand.Intn(neighbors.Len())
-	for i := 0; i < randNeighborIndex; neighbors.Next() {}
+	i :=0
+	for neighbors.Next() {
+		if i == randNeighborIndex {
+			break
+		}
+		i++
+	}
 	return int(neighbors.Node().ID())
 
 }

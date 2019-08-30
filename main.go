@@ -11,5 +11,5 @@ func main() {
 	rand.Seed(42)
 
 	mainInvasion := invasion.New("x.map", 2)
-	mainInvasion.RunInvasionSync( 100 )
+	mainInvasion.RunInvasionSync( 10 )
 }

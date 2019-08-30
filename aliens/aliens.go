@@ -21,9 +21,9 @@ func New(population int, numberOfLocations int) Aliens {
 	for i := 0;  i < population; i++ {
 		randLoc := rand.Intn(numberOfLocations)
 		locations[i] = randLoc
-		//if _, ok := aliensPerLocation[randLoc]; !ok {
-		//	aliensPerLocation[randLoc] = make(map[int]bool)
-		//}
+		if len(aliensPerLocation[randLoc]) == 0 {
+			aliensPerLocation[randLoc] = make(map[int]bool)
+		}
 		aliensPerLocation[randLoc][i] = true // append(aliensPerLocation[randLoc], i)
 	}
 	return Aliens{population, locations, dead,aliensPerLocation}
@@ -35,6 +35,9 @@ func (a Aliens) MoveAlienSync (alien int, dst int) {
 	a.locations[alien] = dst
 	// https://stackoverflow.com/questions/34018908/golang-why-dont-we-have-a-set-datastructure
 	delete(a.aliensPerLocation[src], alien) // remove alien from original loc
+	if len(a.aliensPerLocation[src]) == 0 {
+		a.aliensPerLocation[src] = make(map[int]bool)
+	}
 	a.aliensPerLocation[src][dst] = true // add alien to new destination
 }
 
