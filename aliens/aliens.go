@@ -35,10 +35,11 @@ func (a *Aliens) MoveAlienSync (alien int, dst int) {
 	a.locations[alien] = dst
 	// https://stackoverflow.com/questions/34018908/golang-why-dont-we-have-a-set-datastructure
 	delete(a.aliensPerLocation[src], alien) // remove alien from original loc
-	if len(a.aliensPerLocation[src]) == 0 {
-		a	.aliensPerLocation[src] = make(map[int]bool)
+	if len(a.aliensPerLocation[dst]) == 0 {
+		a	.aliensPerLocation[dst] = make(map[int]bool)
 	}
-	a.aliensPerLocation[src][alien] = true // add alien to new destination
+	a.aliensPerLocation[dst][alien] = true
+	a.aliensPerLocation[src][alien] = false // add alien to new destination
 }
 
 func (a Aliens) NumberOfAliens() int {
@@ -49,19 +50,23 @@ func (a Aliens) IsDead(alien int) bool {
 	return a.dead[alien]
 }
 
+func (a *Aliens) SetDead(alien int) {
+	a.dead[alien] = true
+}
+
 func (a Aliens) Location(alien int) int {
 	return a.locations[alien]
 }
 
 // Fighting of Aliens plus Killing and return list of destroyed Cities.
-func (a Aliens) FightingSync () map[int][]int {
+func (a *Aliens) FightingSync () map[int][]int {
 
 	destroyedCities := make(map[int][]int)
 	for location := 0; location < len(a.aliensPerLocation); location++ {
 		alienLocCount := 0
 		fightingAliens := make([]int, 0)
 		for alien, insitu := range a.aliensPerLocation[location] {
-			if insitu {
+			if !a.dead[alien] && insitu {
 				alienLocCount++
 				fightingAliens = append(fightingAliens, alien)
 			}
