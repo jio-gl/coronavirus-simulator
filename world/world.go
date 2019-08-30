@@ -6,6 +6,7 @@ import (
 	"gonum.org/v1/gonum/graph"
 	"gonum.org/v1/gonum/graph/simple"
 	"log"
+	"math/rand"
 	"os"
 	"strings"
 )
@@ -119,5 +120,13 @@ func LoadWorld(mapFilename string) World {
 
 func (w World) NumberOfCities() int {
 	return len(w.cityIds)
+}
+
+func (w World) randomNeighboringCity(cityId int) int {
+	neighbors := w.worldMap.From(int64(cityId))
+	randNeighborIndex := rand.Intn(neighbors.Len())
+	for i := 0; i < randNeighborIndex; neighbors.Next() {}
+	return int(neighbors.Node().ID())
+
 }
 

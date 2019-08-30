@@ -1,17 +1,15 @@
 package main
 
 import (
-	"AlienInvasion/world"
-	"AlienInvasion/aliens"
+	"AlienInvasion/invasion"
 	"math/rand"
-	)
+)
 
 
 func main() {
 
 	rand.Seed(42)
 
-	var mapFilename = "x.map"
-	someworld := world.LoadWorld(mapFilename)
-
+	mainInvasion := invasion.New("x.map", 2)
+	mainInvasion.RunInvasionSync( 100 )
 }

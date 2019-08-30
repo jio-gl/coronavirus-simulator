@@ -16,8 +16,9 @@ func New(worldFilename string, alienPopulation int) Invasion {
 	return Invasion{&aliensInvading, &worldAttacked}
 }
 
-func (i Invasion) NumberOfCities() int {
-	return len(w.cityIds)
+// Each alien can move only to one neighboring city per day.
+func (i Invasion) RunInvasionSync(days int) {
+
 }
 
 
