@@ -3,6 +3,16 @@
 A simulator of aliens invading a planet. The planet is decribed by a city map with routes, and the aliens starting in random
 cities can move one step at a time to another city using a route.
 
+Features:
+
+* Synchronic version, all fights ocurrency at once.
+* Asynchornic version, using concurrency.
+* Command-line arguments.
+* GoNum library for handling graph or cities and routes.
+* Random initial locations.
+* Custom data format for describing worlds with cities and routes.
+* Testing.
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine 
