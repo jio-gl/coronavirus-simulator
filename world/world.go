@@ -151,6 +151,15 @@ func (w World) NumberOfCities() int {
 	return w.worldMap.Nodes().Len() //len(w.cityIds)
 }
 
+func (w World) NumberOfRoutes() int {
+	return w.worldMap.Edges().Len() //len(w.cityIds)
+}
+
+func (w World) NumberOfRoutesOut(cityId int) int {
+	neighbors := w.worldMap.From(int64(cityId))
+	return neighbors.Len()
+}
+
 func (w World) RandomNeighboringCity(cityId int) int {
 	neighbors := w.worldMap.From(int64(cityId))
 	if neighbors.Len() == 0 {

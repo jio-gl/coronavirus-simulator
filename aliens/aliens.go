@@ -1,7 +1,9 @@
 package aliens
 
 import (
+	"fmt"
 	"math/rand"
+	"sync"
 )
 
 type Aliens struct {
@@ -42,6 +44,22 @@ func (a *Aliens) MoveAlienSync (alien int, dst int) {
 	a.aliensPerLocation[dst][alien] = true
 	a.aliensPerLocation[src][alien] = false // add alien to new destination
 }
+
+// Move Alien Sync
+func (a *Aliens) MoveAlienAsync (alien int, dst int, movementLock sync.Mutex) {
+	movementLock.Lock()
+	src := a.locations[alien]
+	a.locations[alien] = dst
+	// https://stackoverflow.com/questions/34018908/golang-why-dont-we-have-a-set-datastructure
+	delete(a.aliensPerLocation[src], alien) // remove alien from original loc
+	if len(a.aliensPerLocation[dst]) == 0 {
+		a	.aliensPerLocation[dst] = make(map[int]bool)
+	}
+	a.aliensPerLocation[dst][alien] = true
+	a.aliensPerLocation[src][alien] = false // add alien to new destination
+	movementLock.Unlock()
+}
+
 
 func (a Aliens) NumberOfAliens() int {
 	return a.population
@@ -93,6 +111,30 @@ func (a *Aliens) FightingSync () map[int][]int {
 
 	}
 	return destroyedCities
+}
+
+// Fighting of Aliens plus Killing and return bool for city destroyed.
+func (a *Aliens) SingleFight (city int, cityName string) bool {
+
+	wasDestroyed := false
+	alienLocCount := 0
+	fightingAliens := make([]int, 0)
+	for alien, insitu := range a.aliensPerLocation[city] {
+		if !a.dead[alien] && insitu {
+			alienLocCount++
+			fightingAliens = append(fightingAliens, alien)
+		}
+	}
+	if alienLocCount > 1 {
+		wasDestroyed = true
+		// Mark fighters as dead.
+		for fa := range fightingAliens {
+			a.dead[fa] = true
+		}
+		fmt.Printf("ALERT: %s has been destroyed by the following aliens: %s\n",cityName,fightingAliens)
+	}
+
+	return wasDestroyed
 }
 
 func (a Aliens) GetLocation(alien int) int {
