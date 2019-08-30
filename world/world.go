@@ -145,10 +145,10 @@ func (w World) RandomNeighboringCity(cityId int) int {
 }
 
 func (w *World) DestroyCity(city int) {
-	fmt.Println( "Before destruction: ",w.worldMap )
+	//fmt.Println( "Before destruction: ",w.worldMap )
 	w.worldMap.RemoveNode(int64(city))
-	fmt.Println( "Before destruction: ",w.worldMap )
-	fmt.Println( "   " )
+	//fmt.Println( "Before destruction: ",w.worldMap )
+	//fmt.Println( "   " )
 }
 
 func (w World) CityName(city int) string {
