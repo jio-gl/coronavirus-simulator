@@ -30,6 +30,7 @@ func (anInv Invasion) RunInvasionSync(days int) {
 		// Sync day, move all aliens one city and then do fighting.
 
 		// Move all aliens, one city step.
+		anyMovement := false
 		for a := 0; a < anInv.aliensInvading.NumberOfAliens(); a++ {
 			//fmt.Println( "    Alien = ",a )
 			if !anInv.aliensInvading.IsDead(a) {
@@ -41,6 +42,9 @@ func (anInv Invasion) RunInvasionSync(days int) {
 					fmt.Println("DEBUG")
 				}
 
+				if aLoc != newCity {
+					anyMovement = true
+				}
 				anInv.aliensInvading.MoveAlienSync(a,newCity)
 			} else {
 				fmt.Println( "    Alien is Dead = ",a )
@@ -60,6 +64,14 @@ func (anInv Invasion) RunInvasionSync(days int) {
 		}
 		if anInv.worldAttacked.NumberOfCities() == 0 {
 			fmt.Println("WARNING: All cities were destroyed!!! Stopping simulation...")
+			break
+		}
+		if anInv.worldAttacked.NumberOfCities() == 1 {
+			fmt.Println("WARNING: Only one city remaining! Stopping simulation...")
+			break
+		}
+		if !anyMovement {
+			fmt.Println("WARNING: No movements detected, aliens are trapped or all dead! Stopping simulation...")
 			break
 		}
 
