@@ -12,8 +12,8 @@ type Aliens struct {
 	aliensPerLocation []map[int]bool
 }
 
-// Init aliens locations with random cities, one alien per city maximum.
-// Assumption: more or same number of cities than aliens.
+// Init aliens locations with random cities.
+// Assumption: we can have more than one aline per city initially, but the start fighting after the first move.
 func New(population int, numberOfLocations int) Aliens {
 	locations := make([]int, population)
 	dead := make([]bool, population)
@@ -30,15 +30,15 @@ func New(population int, numberOfLocations int) Aliens {
 }
 
 // Move Alien Sync
-func (a Aliens) MoveAlienSync (alien int, dst int) {
+func (a *Aliens) MoveAlienSync (alien int, dst int) {
 	src := a.locations[alien]
 	a.locations[alien] = dst
 	// https://stackoverflow.com/questions/34018908/golang-why-dont-we-have-a-set-datastructure
 	delete(a.aliensPerLocation[src], alien) // remove alien from original loc
 	if len(a.aliensPerLocation[src]) == 0 {
-		a.aliensPerLocation[src] = make(map[int]bool)
+		a	.aliensPerLocation[src] = make(map[int]bool)
 	}
-	a.aliensPerLocation[src][dst] = true // add alien to new destination
+	a.aliensPerLocation[src][alien] = true // add alien to new destination
 }
 
 func (a Aliens) NumberOfAliens() int {
@@ -57,7 +57,7 @@ func (a Aliens) Location(alien int) int {
 func (a Aliens) FightingSync () map[int][]int {
 
 	destroyedCities := make(map[int][]int)
-	for location := 0; location > len(a.aliensPerLocation); location++ {
+	for location := 0; location < len(a.aliensPerLocation); location++ {
 		alienLocCount := 0
 		fightingAliens := make([]int, 0)
 		for alien, insitu := range a.aliensPerLocation[location] {
@@ -65,15 +65,16 @@ func (a Aliens) FightingSync () map[int][]int {
 				alienLocCount++
 				fightingAliens = append(fightingAliens, alien)
 			}
-			if alienLocCount > 1 {
-				// Return destroyed Cities
-				destroyedCities[location] = fightingAliens
-				// Mark fighters as dead.
-				for fa := range fightingAliens {
-					a.dead[fa] = true
-				}
+		}
+		if alienLocCount > 1 {
+			// Return destroyed Cities
+			destroyedCities[location] = fightingAliens
+			// Mark fighters as dead.
+			for fa := range fightingAliens {
+				a.dead[fa] = true
 			}
 		}
+
 	}
 	return destroyedCities
 }
