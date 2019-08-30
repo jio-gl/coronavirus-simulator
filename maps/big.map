@@ -1,0 +1,5 @@
+Roma south=Napoles north=Firenze west=Ostia east=Ancona
+Napoles south=Positano north=Roma west=Capri east=Lecce
+Firenze south=Roma north=Milano west=Pisa east=Venezia
+Ostia south=Anzio north=Civitavecchia east=Roma
+Ancona south=Lecce north=Venezia west=Roma
