@@ -97,7 +97,7 @@ func LoadWorld(mapFilename string) World {
 			// Foo north=Bar west=Baz south=Qu-ux
 			fmt.Println( roadSplit )
 			if _, ok := invNodeIds[roadSplit[1]]; !ok {
-				// Add new city.
+				// New city, Add new city.
 				nodeIds[nodeId] = roadSplit[1]
 				invNodeIds[roadSplit[1]] = nodeId
 				nodeId++
@@ -115,5 +115,9 @@ func LoadWorld(mapFilename string) World {
 
 	world := World{g,nodeIds,invNodeIds}
 	return world
+}
+
+func (w World) NumberOfCities() int {
+	return len(w.cityIds)
 }
 
