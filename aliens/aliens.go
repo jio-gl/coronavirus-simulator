@@ -3,6 +3,7 @@ package aliens
 import (
 	"fmt"
 	"math/rand"
+	"strconv"
 	"sync"
 )
 
@@ -10,7 +11,6 @@ type Aliens struct {
 	population int
 	locations []int
 	dead []bool
-	// https://stackoverflow.com/questions/12677934/create-a-map-of-lists
 	aliensPerLocation []map[int]bool
 }
 
@@ -27,7 +27,7 @@ func New(population int, numberOfLocations int) Aliens {
 		if len(aliensPerLocation[randLoc]) == 0 {
 			aliensPerLocation[randLoc] = make(map[int]bool)
 		}
-		aliensPerLocation[randLoc][i] = true // append(aliensPerLocation[randLoc], i)
+		aliensPerLocation[randLoc][i] = true
 	}
 	return Aliens{population, locations, dead,aliensPerLocation}
 }
@@ -36,7 +36,6 @@ func New(population int, numberOfLocations int) Aliens {
 func (a *Aliens) MoveAlienSync (alien int, dst int) {
 	src := a.locations[alien]
 	a.locations[alien] = dst
-	// https://stackoverflow.com/questions/34018908/golang-why-dont-we-have-a-set-datastructure
 	delete(a.aliensPerLocation[src], alien) // remove alien from original loc
 	if len(a.aliensPerLocation[dst]) == 0 {
 		a	.aliensPerLocation[dst] = make(map[int]bool)
@@ -45,12 +44,11 @@ func (a *Aliens) MoveAlienSync (alien int, dst int) {
 	a.aliensPerLocation[src][alien] = false // add alien to new destination
 }
 
-// Move Alien Sync
+// Move Alien Async
 func (a *Aliens) MoveAlienAsync (alien int, dst int, movementLock sync.Mutex) {
 	movementLock.Lock()
 	src := a.locations[alien]
 	a.locations[alien] = dst
-	// https://stackoverflow.com/questions/34018908/golang-why-dont-we-have-a-set-datastructure
 	delete(a.aliensPerLocation[src], alien) // remove alien from original loc
 	if len(a.aliensPerLocation[dst]) == 0 {
 		a	.aliensPerLocation[dst] = make(map[int]bool)
@@ -131,7 +129,11 @@ func (a *Aliens) SingleFight (city int, cityName string) bool {
 		for fa := range fightingAliens {
 			a.dead[fa] = true
 		}
-		fmt.Printf("ALERT: %s has been destroyed by the following aliens: %s\n",cityName,fightingAliens)
+		printFAliens := ""
+		for _,a := range fightingAliens {
+			printFAliens = printFAliens + ", " + strconv.FormatInt(int64(a), 10)
+		}
+		fmt.Printf("ALERT: %s has been destroyed by the following aliens: %s\n",cityName, printFAliens )
 	}
 
 	return wasDestroyed

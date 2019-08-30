@@ -28,7 +28,7 @@ func (inv Invasion) GetAliens() *aliens.Aliens {
 }
 
 
-// Each alien can move only to one neighboring city per day.
+// Assumption: Each alien can move only to one neighboring city per day.
 func (anInv *Invasion) RunInvasionSync(days int) {
 
 	fmt.Println( anInv.worldAttacked)
@@ -39,14 +39,12 @@ func (anInv *Invasion) RunInvasionSync(days int) {
 
 	for i := 0; i < days; i++ {
 		fmt.Println("Day = ", i)
-		//fmt.Println( anInv.worldAttacked)
-		//fmt.Println( anInv.aliensInvading)
+
 		// Sync day, move all aliens one city and then do fighting.
 
 		// Move all aliens, one city step.
 		anyMovement := false
 		for a := 0; a < anInv.aliensInvading.NumberOfAliens(); a++ {
-			//fmt.Println( "    Alien = ",a )
 			if !anInv.aliensInvading.IsDead(a) {
 				fmt.Println( "    Alien = ",a )
 				aLoc := anInv.aliensInvading.Location(a)
@@ -62,7 +60,6 @@ func (anInv *Invasion) RunInvasionSync(days int) {
 			}
 		}
 		// Do sync fighting.
-		//destroyedCities :=
 		destroyedCities := anInv.aliensInvading.FightingSync()
 		// Iterate destroyed cities, erase cities from graph, and mark killed aliens as dead.
 		for loc, aliensDead := range destroyedCities {
@@ -125,8 +122,6 @@ func (anInv *Invasion) startAlien(alien int, days int, endOfInvasion *sync.WaitG
 		aLoc := anInv.aliensInvading.Location(alien)
 		newCity := anInv.worldAttacked.RandomNeighboringCity(aLoc)
 
-		// Lock current city before moving
-		//anInv.worldAttacked.LockCity(aLoc)
 		// Lock destination city before moving.
 		anInv.worldAttacked.LockCity(newCity)
 
@@ -170,10 +165,6 @@ func (anInv *Invasion) startAlien(alien int, days int, endOfInvasion *sync.WaitG
 
 		// Unlock destination city after moving.
 		anInv.worldAttacked.UnlockCity(newCity)
-		// Unlock current city after moving
-		//anInv.worldAttacked.UnlockCity(aLoc)
-
-
 
 	}
 

@@ -12,15 +12,7 @@ import (
 	"sync"
 )
 
-// Assumption: city names will never a single space " ".
-
-// https://medium.com/@KeithAlpichi/gos-standard-library-by-example-encoding-csv-75f098169822
-
-// https://golang.org/pkg/sync/
-// Package sync provides basic synchronization primitives such as mutual exclusion locks. Other than the Once and WaitGroup types, most are intended for use by low-level library routines. Higher-level synchronization is better done via channels and communication.
-
-// Foo north=Bar west=Baz south=Qu-ux
-// Bar south=Foo west=Bee
+// Assumption: city names will never have a single space " ".
 
 type CityLock struct{ sync.Mutex }
 
@@ -70,8 +62,10 @@ func loadGraph() graph.Graph {
 }
 
 // Assumption: I dont assume is a planar graph, nor 4-regular.
-// Assumption: I dont assume that if we go south from CityA and we reach CityB then from CityB going north we will reach City,
-// maybe or maybe not, routes are just bidirectional in the direction might reach other cities.
+// Assumption: routes are two-way but a city recieving a route from the north might a north route goin to another city.
+// Ex.:
+//     Foo south=Bar
+//     Bar north=Extra
 func LoadWorld(mapFilename string) World {
 
 	// Assuming undirected graph the Aliens can move in both directions.
@@ -93,7 +87,7 @@ func LoadWorld(mapFilename string) World {
 	for scanner.Scan() {
 		line := scanner.Text()
 		lineSplit := strings.Split(line," ")
-		// Assumming we can have cities with no bridges.
+		// Assumming we can have cities with no routes.
 		// Assuming no repetitions of cities, one line per city.
 		if len(lineSplit) < 1 {
 			continue
@@ -148,11 +142,11 @@ func (w *World) UnlockCity(city int) {
 }
 
 func (w World) NumberOfCities() int {
-	return w.worldMap.Nodes().Len() //len(w.cityIds)
+	return w.worldMap.Nodes().Len()
 }
 
 func (w World) NumberOfRoutes() int {
-	return w.worldMap.Edges().Len() //len(w.cityIds)
+	return w.worldMap.Edges().Len()
 }
 
 func (w World) NumberOfRoutesOut(cityId int) int {
@@ -177,21 +171,10 @@ func (w World) RandomNeighboringCity(cityId int) int {
 }
 
 func (w *World) DestroyCity(city int) {
-	//fmt.Println( "Before destruction: ",w.worldMap )
 	w.worldMap.RemoveNode(int64(city))
-	//fmt.Println( "Before destruction: ",w.worldMap )
-	//fmt.Println( "   " )
 }
 
 func (w World) CityName(city int) string {
 	return w.cityIds[city]
 }
 
-/*
-func (w World) CityDestroyed(city int) bool {
-	for w.worldMap.Nodes().Next() {
-		if
-	}
-	return true
-}
-*/
