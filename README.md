@@ -31,6 +31,7 @@ Say what the step will be
 
 ```
 $ go run main.go
+Usage: executablename inputfile.map alienPopulation numberOfSteps [-s]   (-s for synchronic invasion, not asynchronic)
 ```
 
 You can change the map in "maps/big.map" if you want to change the planet description.
