@@ -107,7 +107,6 @@ func (anInv *Invasion) RunInvasionAsync(days int) {
 	var movementLock sync.Mutex
 	endOfInvasion.Add( anInv.aliensInvading.NumberOfAliens() )
 	for a := 0; a < anInv.aliensInvading.NumberOfAliens(); a++ {
-		//fmt.Println( "    Alien = ",a )
 		go anInv.startAlien(a,days, &endOfInvasion, movementLock)
 	}
 
