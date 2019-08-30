@@ -3,11 +3,11 @@ package world
 import (
 	"bufio"
 	"fmt"
+	"gonum.org/v1/gonum/graph"
+	"gonum.org/v1/gonum/graph/simple"
 	"log"
 	"os"
 	"strings"
-	"gonum.org/v1/gonum/graph"
-	"gonum.org/v1/gonum/graph/simple"
 )
 
 // Assumption: city names will never a single space " ".
@@ -18,14 +18,14 @@ import (
 // Package sync provides basic synchronization primitives such as mutual exclusion locks. Other than the Once and WaitGroup types, most are intended for use by low-level library routines. Higher-level synchronization is better done via channels and communication.
 
 type World struct {
-	worldMap   simple.UndirectedGraph
+	worldMap*   simple.UndirectedGraph
 	//alienLocation map[int]int
 	cityIds map[int]string
 	invCityIds map[string]int
 }
 
 func New(worldMap simple.UndirectedGraph, cityIds map[int]string, invCityIds map[string]int) World {
-	w := World{worldMap, cityIds, invCityIds}
+	w := World{&worldMap, cityIds, invCityIds}
 	return w
 }
 
@@ -56,7 +56,7 @@ func loadGraph() graph.Graph {
 	return g
 }
 
-func loadWorld(mapFilename string) World {
+func LoadWorld(mapFilename string) World {
 
 	// Assuming undirected graph the Aliens can move in both directions.
 	g := simple.NewUndirectedGraph()

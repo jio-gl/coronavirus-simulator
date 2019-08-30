@@ -1,17 +1,13 @@
 package main
 
 import (
-	"bufio"
-	"fmt"
-	"log"
-	"os"
-	"strings"
-	"gonum.org/v1/gonum/graph"
-	"gonum.org/v1/gonum/graph/simple"
+	"AlienInvasion/world"
 )
 
 
 func main() {
 
+	var mapFilename = "x.map"
+	world.LoadWorld(mapFilename)
 
 }
