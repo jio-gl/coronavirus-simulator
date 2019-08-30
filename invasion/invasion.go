@@ -17,11 +17,23 @@ func New(worldFilename string, alienPopulation int) Invasion {
 	return Invasion{&aliensInvading, &worldAttacked}
 }
 
+func (inv Invasion) GetWorld() *world.World {
+	return inv.worldAttacked
+}
+
+func (inv Invasion) GetAliens() *aliens.Aliens {
+	return inv.aliensInvading
+}
+
+
 // Each alien can move only to one neighboring city per day.
-func (anInv Invasion) RunInvasionSync(days int) {
+func (anInv *Invasion) RunInvasionSync(days int) {
 
 	fmt.Println( anInv.worldAttacked)
 	fmt.Println( anInv.aliensInvading)
+
+	fmt.Println("Initial Number of Cities = ",anInv.worldAttacked.NumberOfCities())
+
 
 	for i := 0; i < days; i++ {
 		fmt.Println("Day = ", i)
@@ -37,7 +49,7 @@ func (anInv Invasion) RunInvasionSync(days int) {
 				fmt.Println( "    Alien = ",a )
 				aLoc := anInv.aliensInvading.Location(a)
 				newCity := anInv.worldAttacked.RandomNeighboringCity(aLoc)
-				fmt.Printf( "    Moving alien %s from location %s to location %s\n",a,aLoc,newCity)
+				fmt.Printf( "    Moving alien %d from location %d to location %d\n",a,aLoc,newCity)
 				if a == 2 && aLoc == 5 && newCity ==0 {
 					fmt.Println("DEBUG")
 				}
@@ -55,13 +67,14 @@ func (anInv Invasion) RunInvasionSync(days int) {
 		destroyedCities := anInv.aliensInvading.FightingSync()
 		// Iterate destroyed cities, erase cities from graph, and mark killed aliens as dead.
 		for loc, aliensDead := range destroyedCities {
-			fmt.Printf("loca[%s] aliensDead[%s]\n", loc, aliensDead)
+			fmt.Printf("location[%d] aliensDead[%d]\n", loc, aliensDead)
 			fmt.Println("Destroying city =",anInv.worldAttacked.CityName(loc))
 			anInv.worldAttacked.DestroyCity(loc)
 			for a := range aliensDead {
 				anInv.aliensInvading.SetDead(a)
 			}
 		}
+		fmt.Println("Number of Cities = ",anInv.worldAttacked.NumberOfCities())
 		if anInv.worldAttacked.NumberOfCities() == 0 {
 			fmt.Println("WARNING: All cities were destroyed!!! Stopping simulation...")
 			break

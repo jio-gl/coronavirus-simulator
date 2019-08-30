@@ -15,6 +15,7 @@ type Aliens struct {
 // Init aliens locations with random cities.
 // Assumption: we can have more than one aline per city initially, but the start fighting after the first move.
 func New(population int, numberOfLocations int) Aliens {
+
 	locations := make([]int, population)
 	dead := make([]bool, population)
 	aliensPerLocation := make([]map[int]bool,numberOfLocations)
@@ -44,6 +45,16 @@ func (a *Aliens) MoveAlienSync (alien int, dst int) {
 
 func (a Aliens) NumberOfAliens() int {
 	return a.population
+}
+
+func (a Aliens) NumberOfAliensAlive() int {
+	ret := 0
+	for _, deadBool := range a.dead {
+		if !deadBool {
+			ret++
+		}
+	}
+	return ret
 }
 
 func (a Aliens) IsDead(alien int) bool {
@@ -82,4 +93,8 @@ func (a *Aliens) FightingSync () map[int][]int {
 
 	}
 	return destroyedCities
+}
+
+func (a Aliens) GetLocation(alien int) int {
+	return a.locations[alien]
 }
