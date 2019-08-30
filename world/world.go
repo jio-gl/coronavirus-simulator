@@ -9,6 +9,7 @@ import (
 	"math/rand"
 	"os"
 	"strings"
+	"sync"
 )
 
 // Assumption: city names will never a single space " ".
@@ -21,15 +22,23 @@ import (
 // Foo north=Bar west=Baz south=Qu-ux
 // Bar south=Foo west=Bee
 
+type CityLock struct{ sync.Mutex }
+
 type World struct {
 	worldMap*   simple.UndirectedGraph
 	//alienLocation map[int]int
 	cityIds map[int]string
 	invCityIds map[string]int
+	cityLocks []*CityLock
 }
 
 func New(worldMap simple.UndirectedGraph, cityIds map[int]string, invCityIds map[string]int) World {
-	w := World{&worldMap, cityIds, invCityIds}
+	// Create city locks
+	cityLocks := make([]*CityLock, worldMap.Nodes().Len())
+	for i := 0; i < worldMap.Nodes().Len(); i++ {
+		cityLocks[i] = new(CityLock)
+	}
+	w := World{&worldMap, cityIds, invCityIds, cityLocks}
 	return w
 }
 
@@ -120,8 +129,22 @@ func LoadWorld(mapFilename string) World {
 		log.Fatal(err)
 	}
 
-	world := World{g,nodeIds,invNodeIds}
+	// Create city locks
+	cityLocks := make([]*CityLock, g.Nodes().Len())
+	for i := 0; i < g.Nodes().Len(); i++ {
+		cityLocks[i] = new(CityLock)
+	}
+
+	world := World{g,nodeIds,invNodeIds, cityLocks}
 	return world
+}
+
+func (w *World) LockCity(city int) {
+	w.cityLocks[city].Lock()
+}
+
+func (w *World) UnlockCity(city int) {
+	w.cityLocks[city].Unlock()
 }
 
 func (w World) NumberOfCities() int {

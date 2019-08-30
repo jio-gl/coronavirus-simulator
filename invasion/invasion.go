@@ -4,6 +4,7 @@ import (
 	"AlienInvasion/aliens"
 	"AlienInvasion/world"
 	"fmt"
+	"sync"
 )
 
 type Invasion struct {
@@ -92,4 +93,47 @@ func (anInv *Invasion) RunInvasionSync(days int) {
 }
 
 
+// Each alien can move only to one neighboring city per day.
+func (anInv *Invasion) RunInvasionAsync(days int) {
 
+	fmt.Println(anInv.worldAttacked)
+	fmt.Println(anInv.aliensInvading)
+
+	fmt.Println("Initial Number of Cities = ", anInv.worldAttacked.NumberOfCities())
+
+	var endOfInvasion sync.WaitGroup
+	endOfInvasion.Add( anInv.aliensInvading.NumberOfAliens() )
+	for a := 0; a < anInv.aliensInvading.NumberOfAliens(); a++ {
+		//fmt.Println( "    Alien = ",a )
+		go anInv.startAlien(a,&endOfInvasion)
+	}
+
+	endOfInvasion.Wait()
+	fmt.Println("End of Async Invasion reached.")
+
+}
+
+func (anInv *Invasion) startAlien(alien int, endOfInvasion *sync.WaitGroup) {
+
+	aLoc := anInv.aliensInvading.Location(a)
+	newCity := anInv.worldAttacked.RandomNeighboringCity(aLoc)
+
+	// Lock current city before moving
+	anInv.worldAttacked.LockCity(aLoc)
+	// Lock destination city before moving.
+	anInv.worldAttacked.LockCity(newCity)
+
+	// Do the movement, fight and destruction
+
+	// End of movement, fight and destruction
+
+	// Unlock current city after moving
+	anInv.worldAttacked.LockCity(aLoc)
+	// Unlock destination city after moving.
+	anInv.worldAttacked.LockCity(newCity)
+
+
+
+	// Signal end of alien activity
+	endOfInvasion.Done()
+}
