@@ -154,6 +154,16 @@ func (w World) NumberOfRoutesOut(cityId int) int {
 	return neighbors.Len()
 }
 
+func (w World) RoutesOut(cityId int) []int {
+	neighbors := w.worldMap.From(int64(cityId))
+	routesOut := make([]int,neighbors.Len())
+	for i,_ := range routesOut {
+		neighbors.Next()
+		routesOut[i] = int(neighbors.Node().ID())
+	}
+	return routesOut
+}
+
 func (w World) RandomNeighboringCity(cityId int) int {
 	neighbors := w.worldMap.From(int64(cityId))
 	if neighbors.Len() == 0 {
@@ -178,3 +188,25 @@ func (w World) CityName(city int) string {
 	return w.cityIds[city]
 }
 
+func (w World) PrintWorld() {
+	nodes := w.worldMap.Nodes()
+	for nodes.Next() {
+		node := nodes.Node()
+		routes := ""
+		neighs := w.RoutesOut( int(node.ID()) )
+
+		switch {
+		case len(neighs) == 1:
+			routes = fmt.Sprintf("north=%s", w.cityIds[neighs[0]] )
+		case len(neighs) == 2:
+			routes = fmt.Sprintf("north=%s south=%s", w.cityIds[neighs[0]], w.cityIds[neighs[1]] )
+		case len(neighs) == 3:
+			routes = fmt.Sprintf("north=%s south=%s west=%s", w.cityIds[neighs[0]], w.cityIds[neighs[1]], w.cityIds[neighs[2]] )
+		case len(neighs) == 4:
+			routes = fmt.Sprintf("north=%s south=%s west=%s east=%s", w.cityIds[neighs[0]], w.cityIds[neighs[1]], w.cityIds[neighs[2]], w.cityIds[neighs[3]] )
+		default:
+			routes = ""
+		}
+		fmt.Println(w.cityIds[int(node.ID())] + " " + routes)
+	}
+}

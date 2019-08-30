@@ -89,6 +89,10 @@ func (anInv *Invasion) RunInvasionSync(days int) {
 		}
 
 	}
+
+	fmt.Println("INFO: Printing final world state:")
+	anInv.worldAttacked.PrintWorld()
+
 }
 
 
@@ -109,6 +113,9 @@ func (anInv *Invasion) RunInvasionAsync(days int) {
 
 	endOfInvasion.Wait()
 	fmt.Println("End of Async Invasion reached.")
+
+	fmt.Println("INFO: Printing final world state:")
+	anInv.worldAttacked.PrintWorld()
 
 }
 
