@@ -5,8 +5,8 @@ cities can move one step at a time to another city using a route.
 
 Features:
 
-* Synchronic version, all fights ocurrency at once.
-* Asynchornic version, using concurrency.
+* Synchronic version, all fights happen at once.
+* Asynchronic version, using concurrency.
 * Command-line arguments.
 * GoNum library for handling graph or cities and routes.
 * Random initial locations.
