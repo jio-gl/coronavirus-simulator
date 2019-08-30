@@ -122,8 +122,11 @@ func (w World) NumberOfCities() int {
 	return len(w.cityIds)
 }
 
-func (w World) randomNeighboringCity(cityId int) int {
+func (w World) RandomNeighboringCity(cityId int) int {
 	neighbors := w.worldMap.From(int64(cityId))
+	if neighbors.Len() == 0 {
+		return cityId // Same city if no neighboring cities, trapped.
+	}
 	randNeighborIndex := rand.Intn(neighbors.Len())
 	for i := 0; i < randNeighborIndex; neighbors.Next() {}
 	return int(neighbors.Node().ID())
