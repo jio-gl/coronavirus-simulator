@@ -64,7 +64,7 @@ This project is licensed under the Apache License - see the [LICENSE](LICENSE) f
 
 ## Acknowledgments
 
-* Recruitment officer for support.
+* Golang Guru.
 * Dinning Philosophers.
 * Family.
 * etc
