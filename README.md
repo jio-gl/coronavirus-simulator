@@ -1,4 +1,4 @@
-# AlienInvasion: 
+# coronavirus-invasion: 
 
 Simulating the invasion by an alien coronavirus on a social network described by persons and connections. Synchronic and Asynchronic versions.
 
@@ -28,7 +28,7 @@ $ git clone https://github.com/manfr3d/AlienInvasion
 What things you need to install the software and how to install them
 
 ```
-$ cd AlienInvasion
+$ cd coronavirus-invasion
 $ go get ./...
 ```
 
