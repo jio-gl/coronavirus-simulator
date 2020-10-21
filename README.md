@@ -1,4 +1,4 @@
-# coronavirus-invasion: 
+# coronavirus-simulator: 
 
 Simulating the invasion by an alien coronavirus on a social network described by persons and connections. Synchronic and Asynchronic versions.
 
