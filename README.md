@@ -1,7 +1,6 @@
 # AlienInvasion: 
 
-A simulator of aliens invading a planet. The planet is decribed by a city map with routes, and the aliens starting in random
-cities can move one step at a time to another city using a route.
+Simulating the invasion by an alien coronavirus on a social network described by persons and connections. Synchronic and Asynchronic versions.
 
 Features:
 
