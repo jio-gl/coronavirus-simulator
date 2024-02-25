@@ -19,7 +19,7 @@ for development and testing purposes. See deployment for notes on how to deploy 
 on a live system.
 
 ```
-$ git clone https://github.com/joigno/coronavirus-invasion
+$ git clone https://github.com/REPO/coronavirus-invasion
 ```
 
 
