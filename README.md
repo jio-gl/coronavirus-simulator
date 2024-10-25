@@ -55,7 +55,7 @@ $ get test ./...
 
 ## Authors
 
-* **Jose I Orlicki** 
+* **Jose I ** 
 
 ## License
 
